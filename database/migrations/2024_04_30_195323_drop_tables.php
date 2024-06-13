@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::dropIfExists('posts_comments');
         Schema::dropIfExists('posts_attachments');
         Schema::dropIfExists('posts');
-        Schema::dropIfExists('events_users');
+        Schema::dropIfExists('users_events');
         Schema::dropIfExists('events');
         Schema::dropIfExists('services');
         Schema::dropIfExists('users_services');

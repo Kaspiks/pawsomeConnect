@@ -27,6 +27,19 @@ class User extends Authenticatable
         'password',
     ];
 
+
+    public function pets() {
+        return $this->belongsToMany(Pet::class);
+    }
+
+    public function services() {
+        return $this->belongsToMany(Service::class);
+    }
+
+    public function events() {
+        return $this->belongsToMany(Event::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
