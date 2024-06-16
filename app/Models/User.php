@@ -21,8 +21,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'company_name',
-        'person_code',
-        'registration_number',
+        'person_code',daasdasd
         'email',dasdasd
         'password',dasdasd
     ];
