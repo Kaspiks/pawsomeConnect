@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Pet extends Model
 {
     use HasFactory;
+    protected $fillable = ['name', 'breed', 'type', 'age', 'description'];
+
+    public function users() {
+        return $this->belongsToMany(User::class);
+    }
 }

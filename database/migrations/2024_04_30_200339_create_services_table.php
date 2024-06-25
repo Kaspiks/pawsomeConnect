@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->foreignId('service_category_id')->constrained('services_categories');
-            $table->decimal('price', 10, 2);
+            $table->foreignId('service_category_id')->constrained('service_categories');
+            $table->decimal('price', 8, 2);
             $table->timestamps();
         });
     }

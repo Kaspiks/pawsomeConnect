@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class PostsAttachment extends Model
 {
     use HasFactory;
+    protected $fillable = ['data'];
+
+    public function post() {
+        return $this->belongsTo(Post::class);
+    }
 }
