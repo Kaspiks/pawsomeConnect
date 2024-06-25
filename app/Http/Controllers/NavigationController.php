@@ -10,9 +10,9 @@ class NavigationController extends Controller
     public static function getMenuItems()
     {
         $menuItems = [
-            new MenuItem('Home', '/home'),
-            new MenuItem('About', '/about'),
-            new MenuItem('Contact', '/contact'),
+            new MenuItem('Posts', '/posts'),
+            new MenuItem('Events', '/events'),
+            new MenuItem('Services', '/services'),
         ];
 
         return $menuItems;

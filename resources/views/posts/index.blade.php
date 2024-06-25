@@ -18,9 +18,6 @@
       @include('layouts.nav', ['menuItems' => $menuItems])
     </div>
 
-    {{-- @include('layouts.navigation', ['menuItems' => App\Http\Controllers\NavigationController::getMenuItems()]) --}}
-
-
     @foreach ($posts as $post)
         <h2><a href="{{ route('posts.show', $post->id) }}">{{ $post->title }}</a></h2>
         <p>An article by <em>{{$post->user->name}}</em> published on {{$post->created_at->format('d.m.y')}}
