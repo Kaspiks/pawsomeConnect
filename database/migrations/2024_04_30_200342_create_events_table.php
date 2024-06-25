@@ -28,6 +28,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users_events', function (Blueprint $table) {
+            $table->dropForeign(['event_id']); // Replace 'child_table_name' and 'event_id' with the actual names
+        });
+
         Schema::dropIfExists('events');
     }
 };
