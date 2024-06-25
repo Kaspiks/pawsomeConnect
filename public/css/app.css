@@ -83,6 +83,10 @@ hr {
   /* 3 */
 }
 
+.width-11 {
+    width: 11rem;
+}
+
 /*
 Add the correct text decoration in Chrome, Edge, and Safari.
 */
@@ -753,34 +757,59 @@ select {
   width: 100%;
 }
 
+/* .container-l {
+    max-width: 100%;
+} */
+
+
 @media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-  }
+    .container-l {
+        max-width: 640px;
+    }
+
+    .container {
+        max-width: 640px;
+    }
 }
 
 @media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
+    .container-l {
+        max-width: 768px;
+    }
+
+    .container {
+        max-width: 768px;
+    }
 }
 
 @media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
+    .container-l {
+        max-width: 1024px;
+    }
+
+    .container {
+        max-width: 1024px;
+    }
 }
 
 @media (min-width: 1280px) {
+  .container-l {
+    max-width: 1000px;
+  }
+
   .container {
     max-width: 1280px;
   }
 }
 
 @media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
+    .container-l {
+        max-width: 1280px;
+    }
+
+    .container {
+        max-width: 1536px;
+    }
 }
 
 .sr-only {
@@ -1439,6 +1468,10 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-red-500 {
+    background-color: rgb(244 63 94);
 }
 
 .bg-gradient-to-b {
