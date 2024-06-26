@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\PetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -18,7 +19,10 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::resource('posts', PostController::class);
 Route::resource('services', ServiceController::class);
 Route::resource('events', EventController::class);
+Route::resource('pets', PetController::class);
+Route::delete('/posts/{post}/attachments/{attachment}', [PostController::class, 'deleteAttachment'])->name('posts.attachments.destroy');
 Route::delete('/events/{event}/attachments/{attachment}', [EventController::class, 'deleteAttachment'])->name('events.attachments.destroy');
+Route::delete('/pets/{pet}/attachments/{attachment}', [PetController::class, 'deleteAttachment'])->name('pets.attachments.destroy');
 
 Route::post('services/{service}/apply', [ServiceController::class, 'apply'])->name('service.apply');
 Route::post('events/{event}/apply', [EventController::class, 'apply'])->name('events.apply');
@@ -35,8 +39,7 @@ Route::get('/dashboard', function () {
     return redirect()->route('posts.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-
+Route::post('/comments/{post}', [CommentController::class, 'store'])->name('comments.store');
 
 // Dashboard route with authentication middleware
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -49,11 +52,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-
-    // User detail route (My Profile)
-    Route::get('/userdetail', function () {
-        return view('userdetail');
-    })->name('userdetail');
 });
 
 // Force HTTPS

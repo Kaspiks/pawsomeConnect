@@ -74,14 +74,6 @@
                     </form>
                 </div>
             @endif
-            {{-- <div class="flex justify-center mt-4 mb-8">
-                <form method="POST" action="{{ route('events.apply', $event) }}">
-                    @csrf
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Apply
-                    </button>
-                </form>
-            </div> --}}
         </div>
 
         @if ($event->attachments->isNotEmpty())
