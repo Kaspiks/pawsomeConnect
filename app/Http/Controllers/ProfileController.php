@@ -14,6 +14,18 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
+
+    public function show()
+    {
+        $user = Auth::user();
+        $posts = $user->posts;
+        $pets = $user->pets()->with('attachments')->get();
+        $events = $user->events;
+        $services = $user->services;
+
+        return view('profile.show', compact('user', 'posts', 'pets', 'events', 'services'));
+    }
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
