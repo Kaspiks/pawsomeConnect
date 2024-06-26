@@ -19,14 +19,6 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         $service_categories = ServiceCategory::all()->keyBy('id');
-        // $query = Service::with('category','owners');
-
-        // if ($request->has('category_id') && $request->category_id !== '') {
-        //     $query->where('service_category_id', $request->category_id);
-        //     $services = $query->get();
-        // } else {
-        //     $services = Service::all();
-        // }
 
 
         if ($request->category_id !== null) {
@@ -38,7 +30,6 @@ class ServiceController extends Controller
         }
 
 
-        // $categories = Category::all()->keyBy('id');
         return view('services.index', compact('services', 'service_categories'));
     }
 
@@ -128,7 +119,6 @@ class ServiceController extends Controller
         ]);
 
 
-        //all clear - updating the post!
         $service->name = $validate['name'];
         $service->description = $validate['description'];
         $service->service_category_id = $validate['service_category_id'];
@@ -160,7 +150,6 @@ class ServiceController extends Controller
         }
 
 
-        // 2. Attach the User as a Customer to the Service
         $service->users()->attach($user->id, ['user_type' => 'customer']);
 
         return redirect()->back()->with('success', 'Your application has been submitted.');

@@ -4,11 +4,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\NavigationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\URL;
 
 // Redirect root to /posts
 Route::redirect('/', '/posts');
@@ -17,7 +17,12 @@ Route::redirect('/', '/posts');
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::resource('posts', PostController::class);
 Route::resource('services', ServiceController::class);
+Route::resource('events', EventController::class);
+Route::delete('/events/{event}/attachments/{attachment}', [EventController::class, 'deleteAttachment'])->name('events.attachments.destroy');
+
 Route::post('services/{service}/apply', [ServiceController::class, 'apply'])->name('service.apply');
+Route::post('events/{event}/apply', [EventController::class, 'apply'])->name('events.apply');
+
 
 // Navigation route
 Route::get('/navigation', [NavigationController::class, 'show']);
