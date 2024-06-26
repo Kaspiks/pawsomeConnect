@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Admin']);
 
         $user = User::factory()->create([
-            'nickname' => 'Kaspars',
+            'nicknickname' => 'Kaspars',
             'email' => 'kaspars@gmail.com',
             'password' => 'kaspiks12'
         ]);
@@ -52,5 +52,14 @@ class DatabaseSeeder extends Seeder
             $owner = rand(0, 1) ? $user : $user2;
             $service->users()->attach($owner, ['user_type' => 'owner']);
         });
+
+
+        $this->call([
+            CategoriesTableSeeder::class,
+            UsersTableSeeder::class,
+            PostsTableSeeder::class,
+            CommentsTableSeeder::class,
+        ]);
+        
     }
 }
