@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\PostsComment;
+use App\Models\PostsAttachment;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -34,8 +36,9 @@ class PostController extends Controller
             abort(403);
         }
 
-        
-        return view('posts.create');
+        $categories = Category::all();
+
+        return view('posts.create', compact('categories'));
     }
 
     /**
@@ -43,52 +46,38 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validate = $request->validate([
             'title' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
             'body' => 'required',
+            'category_id' => 'required|integer|exists:categories,id'
         ]);
 
         $user = Auth::user();
-         
-        $post = new Post();
-        $post->title = $request->title;
-        $post->user_id = $user->id;
-        $post->body = $request->body;
-        $post->save();
 
+        $post = Post::create([
+            'title' => $validate['title'],
+            'user_id' => $user->id,
+            'body' => $validate['body'],
+            'category_id' => $validate['category_id']
+        ]);
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $data['image_path'] = $imagePath;
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('photos', 'public');
+                $post->attachments()->create(['data' => $path]); 
+            }
         }
-
 
         return redirect()->route('posts.show', $post->id)->with('success', 'Post has been created successfully');
     }
 
-    public function storeComment(Request $request, $postId)
-    {
-        $request->validate([
-            'content' => 'required|string|max:255',
-        ]);
-
-        $user = Auth::user();
-
-        $comment = new PostsComment();
-        $comment->content = $request->content;
-        $comment->user_id = $user->id;
-        $comment->post_id = $postId;
-        $comment->save();
-
-        return redirect()->back()->with('success', 'Comment has been added successfully');
-    }
-
-
     public function show($id)
     {
-        $post = Post::findOrFail($id);
-        return view('posts.show', compact('post'));
+        $individual = Auth::user();
+        $post = Post::with('attachments')->findOrFail($id);
+
+        $user = $post->user();
+        return view('posts.show', compact('post', 'individual', 'user'));
     }
 
     /**
@@ -96,9 +85,14 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id);
+        if (!Auth::check()) {
+            abort(403);
+        }
 
-        return view('posts.edit', compact('post'));
+        $categories = Category::all();
+        $post = Post::with('attachments')->findOrFail($id);
+        $user = $post->user();
+        return view('posts.edit', compact('post', 'user', 'categories'));
     }
 
     /**
@@ -108,19 +102,30 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        $request->validate([
+        $validate = $request->validate([
             'title' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
             'body' => 'required',
+            'category_id' => 'required|integer|exists:categories,id'
         ]);
         
         $user = Auth::user();
 
-        $post->title = $request->title;
+        $post->title = $request['title'];
         $post->user_id = $user->id;
-        $post->body = $request->body;
-        $post->save();
+        $post->body = $request['body'];
+        $post->category_id = $request['category_id'];
 
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('photos', 'public');
+                PostsAttachment::create([
+                    'data' => $path,
+                    'event_id' => $post->id,
+                ]);
+            }
+        }
+
+        $post->save();
         return redirect()->route('posts.show', $id)->with('success', 'Post has been updated successfully');
     }
 
@@ -133,5 +138,16 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post has been deleted successfully');
+    }
+    public function deleteAttachment(Post $post, PostsAttachment $attachment)
+    {
+        if ($attachment->post_id == $post->id) {
+            Storage::disk('public')->delete($attachment->data);
+            $attachment->delete();
+
+            return response()->json(['message' => 'Attachment deleted successfully']);
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
     }
 }

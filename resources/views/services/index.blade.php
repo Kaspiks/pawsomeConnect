@@ -21,14 +21,16 @@
 
     @auth
         <div class="flex items-center justify-center mt-4">
-            <a href="{{ route('services.create') }}" style="width:11rem" class="bg-gray-800 align-middle select-none font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] flex items-center gap-3" type="submit">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z">
-                    </path>
-                </svg>
-                Create Service
-            </a>
+            @auth
+                <a href="{{ route('services.create') }}" style="width:11rem" class="bg-gray-800 align-middle select-none font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] flex items-center gap-3" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z">
+                        </path>
+                    </svg>
+                    Create Service
+                </a>
+            @endauth
 
             <form action="{{ route('services.index') }}" method="GET" class="flex items-center">
                 <select name="category_id" class="ml-2 form-select p-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300">
@@ -68,17 +70,19 @@
                 @endif
                 <p class="mb-4">{{ $service->description }}</p>
 
-                <div class="flex space-x-2">
-                    <form method="GET" action="{{ route('services.edit', $service->id) }}">
-                        @csrf
-                        <button type="submit" class="mr-2 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-700">Edit</button>
-                    </form>
-                    <form method="POST" action="{{ route('services.destroy', $service->id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-700">Delete</button>
-                    </form>
-                </div>
+                @can('update-services', $service)
+                    <div class="flex space-x-2">
+                        <form method="GET" action="{{ route('services.edit', $service->id) }}">
+                            @csrf
+                            <button type="submit" class="mr-2 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-700">Edit</button>
+                        </form>
+                        <form method="POST" action="{{ route('services.destroy', $service->id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-700">Delete</button>
+                        </form>
+                    </div>
+                @endcan
             </div>
         @endforeach
     </div>

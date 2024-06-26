@@ -6,23 +6,24 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\PostsComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, Post $post)
     {
-        $request->validate([
-            'post_id' => 'required|exists:posts,id',
-            'content' => 'required',
-            'user_id' => 'required|exists:users,id',
+        $validated = $request->validate([
+            'content' => 'required|string|max:255',
         ]);
 
-        PostsComment::create([
-            'post_id' => $request->post_id,
-            'content' => $request->content,
-            'user_id' => $request->user_id,
-        ]);
+        $recipe = Post::findOrFail($post->id);
 
-        return redirect()->route('blogs.index');
+        $comment = new PostsComment();
+        $comment->content = $validated['content'];
+        $comment->user_id = auth()->id();
+        $comment->post_id = $post->id;
+        $comment->save();
+
+        return redirect()->route('posts.show', $post->id)->with('success', 'Comment added successfully!');
     }
 }

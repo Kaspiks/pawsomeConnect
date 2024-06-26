@@ -19,21 +19,7 @@ class EventController extends Controller
      */
     public function index()
     {
-
-        // if ($request->category_id !== null) {
-        //     $services = Event::when($request->has('category_id'), function ($query) use ($request) {
-        //         return $query->where('service_category_id', $request->category_id);
-        //     })->get();
-        // } else {
-        //     $services = Service::all();
-        // }
-
-
         $events = Event::with('attachments')->orderBy('created_at', 'desc')->get();
-
-        // dump($events);
-
-        // $categories = Category::all()->keyBy('id');
         return view('events.index', compact('events'));
     }
 

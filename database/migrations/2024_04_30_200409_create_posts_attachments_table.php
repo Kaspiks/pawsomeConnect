@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('posts_attachments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            $table->binary('data'); // Assuming binary data for attachments
+            $table->string('data'); 
             $table->timestamps();
         });
     }

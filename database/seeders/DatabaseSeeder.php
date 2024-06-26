@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Admin']);
 
         $user = User::factory()->create([
-            'nicknickname' => 'Kaspars',
+            'nickname' => 'Kaspars',
             'email' => 'kaspars@gmail.com',
             'password' => 'kaspiks12'
         ]);
@@ -57,6 +57,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             PostsTableSeeder::class,
             CommentsTableSeeder::class,
+            PetsSeeder::class,
         ]);
         
     }

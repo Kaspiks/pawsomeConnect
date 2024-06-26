@@ -69,7 +69,6 @@
         </form>
     </div>
 
-
     <script>
         const input = document.getElementById('attachments');
         const imagePreviews = document.getElementById('image-previews');
