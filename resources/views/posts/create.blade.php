@@ -2,48 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Post</title>
+    <title>Create New Post</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+@vite('resources/css/app.css')
 </head>
 <body>
-    <h1>Create Post</h1>
+    @php
+        $menuItems = app(\App\Http\Controllers\NavigationController::class)->getMenuItems();
+    @endphp
 
-    <form action="{{ route('posts.store') }}" method="POST">
-        @csrf
+    <div>
+        @include('layouts.nav', ['menuItems' => $menuItems])
+    </div>
 
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" class="form-control" value="{{ old('title') }}">
-        </div>
+    <div class="container">
+        <h1>Create New Post</h1>
+        <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+            </div>
 
-        <div>
-            <label for="body">Body:</label>
-            <textarea id="body" name="body" cols="80" rows="20" class="form-control">{{ old('body') }}</textarea>
-        </div>
+            <div class="form-group">
+                <label for="body">Body</label>
+                <textarea id="body" name="body" class="form-control" rows="6" required></textarea>
+            </div>
 
-        <div>
-            <label for="author">Author:</label>
-            <select id="author" name="author_id" class="form-control">
-                @foreach ($authors as $author)
-                    <option value="{{ $author->id }}" {{ old('author_id') == $author->id ? 'selected' : '' }}>
-                        {{ $author->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="image">Upload Image</label>
+                <input type="file" id="image" name="image" class="form-control">
+            </div>
 
-        <div>
-            <label for="category">Category:</label>
-            <select id="category" name="category_id" class="form-control">
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                        {{ $category->title }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Create Post</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\PostsComment;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -16,9 +17,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all()->sortByDesc('created_at');
-        // $categories = Category::all()->keyBy('id');
-        return view('posts.index', compact('posts'));
+        // Fetch posts sorted by created_at in descending order, paginated
+        $posts = Post::orderBy('created_at', 'desc')->paginate(10);
+    
+        $categories = Category::all()->keyBy('id');
+    
+        return view('posts.index', compact('posts', 'categories'));
     }
 
     /**
@@ -30,9 +34,8 @@ class PostController extends Controller
             abort(403);
         }
 
-        $users = User::all();
-
-        return view('posts.create', compact('users'));
+        
+        return view('posts.create');
     }
 
     /**
@@ -40,72 +43,95 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $users = User::all();
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
+            'body' => 'required',
+        ]);
 
-        if ($request->title == null || $request->user_id == null || $request->body == null) {
-            //if you deleted everyting - go back and fill it!
+        $user = Auth::user();
+         
+        $post = new Post();
+        $post->title = $request->title;
+        $post->user_id = $user->id;
+        $post->body = $request->body;
+        $post->save();
 
-            return redirect()->route('posts.create', compact('users'))->with('error', 'Failed to create post. Please try again.');
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $data['image_path'] = $imagePath;
         }
 
-        $post = Post::create([
-            'title' => $request->title,
-            'user_id' => $request->user_id,
-            'body' => $request->body,
-        ]);
 
         return redirect()->route('posts.show', $post->id)->with('success', 'Post has been created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function storeComment(Request $request, $postId)
     {
-        $post = Post::find($id);
+        $request->validate([
+            'content' => 'required|string|max:255',
+        ]);
+
+        $user = Auth::user();
+
+        $comment = new PostsComment();
+        $comment->content = $request->content;
+        $comment->user_id = $user->id;
+        $comment->post_id = $postId;
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Comment has been added successfully');
+    }
+
+
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
         return view('posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $post = Post::find($id);
-        $users = User::all();
+        $post = Post::findOrFail($id);
 
-        return view('posts.edit', compact('post', 'users'));
+        return view('posts.edit', compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
 
-        if (! Gate::allows('update-post', $post)) {
-            abort(403);
-        }
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
+            'body' => 'required',
+        ]);
+        
+        $user = Auth::user();
 
-        if ($request->title == null || $request->user_id == null || $request->body == null) {
-            //if you deleted everyting - go back and fill it!
-            return redirect()->route('posts.edit', $id);
-        }
-        //all clear - updating the post!
         $post->title = $request->title;
-        $post->user_id = $request->user_id;
+        $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
-        return redirect()->route('posts.show', $id);
+
+        return redirect()->route('posts.show', $id)->with('success', 'Post has been updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        Post::findOrfail($id)->delete();
-        return redirect()->route('posts.index');
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        return redirect()->route('posts.index')->with('success', 'Post has been deleted successfully');
     }
 }
