@@ -49,7 +49,7 @@ class EventController extends Controller
             'description' => 'required|string',
             'date' => 'required|date|after_or_equal:'. Carbon::now()->addDays(2)->toDateString(),
             'max_amount_of_people' => 'required|numeric|between:1,100',
-            'price' => 'required|numeric|between:50,500',
+            'price' => 'required|numeric|between:0,500',
             'location' => 'required|string'
         ]);
 
@@ -117,7 +117,7 @@ class EventController extends Controller
             'description' => 'required|string',
             'date' => 'required|date|after_or_equal:'. Carbon::now()->addDays(2)->toDateString(),
             'max_amount_of_people' => 'required|numeric|between:1,100',
-            'price' => 'required|numeric|between:50,500',
+            'price' => 'required|numeric|between:0,500',
             'location' => 'required|string'
         ]);
 
