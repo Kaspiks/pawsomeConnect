@@ -37,10 +37,10 @@
             <h3 class="text-xl font-semibold text-gray-800 mb-4">My Pets</h3>
             <div class="pet-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="user-pets">
                 @foreach($pets as $pet)
-                    <div class="pet-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="pet-card bg-white rounded-lg shadow-md overflow-hidden  {{ $pet != $pets->first() ? 'mt-4' : '' }} {{ $pet == $pets->last() ? 'mb-4' : ''}}">
                         <a href="{{ route('pets.show', $pet->id) }}">
                             @if ($pet->attachments->first())
-                                <img src="{{ asset('storage/' . $pet->attachments->first()->data) }}" alt="Pet image" style="height: 12rem;" class="w-full object-cover"> 
+                                <img src="{{ asset('storage/' . $pet->attachments->first()->data) }}" alt="Pet image" style="height: 12rem;" class="w-full object-cover">
                             @endif
                             <div class="p-4">
                                 <h4 class="text-lg font-medium">{{ $pet->name }}</h4>
@@ -56,7 +56,7 @@
             <div class="post-grid grid grid-cols-1 md:grid-cols-2 gap-8" id="user-posts">
                 @if ($posts)
                     @foreach($posts as $post)
-                        <div class="post-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="post-card bg-white rounded-lg shadow-md overflow-hidden {{ $post != $posts->first() ? 'mt-4' : '' }} {{ $post == $posts->last() ? 'mb-4' : ''}}">
                             <a href="{{ route('posts.show', $post->id) }}">
                                 <div class="p-4">
                                     <h4 class="text-lg font-medium">{{ $post->title }}</h4>

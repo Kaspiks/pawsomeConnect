@@ -40,20 +40,20 @@
                     @endif
                     <div class="p-6">
                         <a href="{{ route('events.show', $event->id) }}" class="block">
-                            <h1 class="text-xl font-medium md:text-4xl font-extrabold mb-2 hover:underline text-blue-600 tracking-tight">{{ $event->name }}</h1>
+                            <h1 class="text-xl font-medium md:text-4xl font-extrabold mb-2 text-blue-600 tracking-tight">{{ $event->name }}</h1>
                         </a>
 
                         @if ($event->hosts->isNotEmpty())
                             <p class="text-gray-600 text-sm mb-2">
                                 Service by
-                                <em>
-                                    @foreach ($event->hosts as $host)
-                                        {{ $host->nickname }}
-                                        @if (!$loop->last)
-                                            ,
-                                        @endif
-                                    @endforeach
-                                </em>
+                                @foreach ($event->hosts as $host)
+                                    <a href="{{ route('profile.show', $host->id) }}" class="text-gray-600">
+                                        <em>{{ $host->nickname }}</em>
+                                    </a>
+                                    @if (!$loop->last)
+                                        ,
+                                    @endif
+                                @endforeach
                                 published on {{ $event->created_at->format('d.m.y') }}
                             </p>
                         @endif

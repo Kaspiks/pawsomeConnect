@@ -19,7 +19,7 @@
       @include('layouts.nav', ['menuItems' => $menuItems])
     </div>
 
-    <div class="container mx-auto mt-8">
+    <div class="container mx-auto mt-8 mb-12">
         <div class="flex justify-between items-center mb-4">
             @auth
                 <a href="{{ route('pets.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -30,16 +30,16 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach ($pets as $pet)
-                <div class="bg-white shadow-md rounded-lg overflow-hidden {{ $loop->iteration % 2 == 0 ? 'md:-mt-8' : 'md:mt-8' }}"> 
+                <div class="bg-white shadow-md rounded-lg overflow-hidden {{ $loop->iteration % 2 == 0 ? 'md:-mt-8' : 'md:mt-8' }}">
                     @if ($pet->attachments->isNotEmpty())
-                        <img src="{{ asset('storage/' . $pet->attachments->first()->data) }}" alt="Pet Banner" class="w-full h-48 object-cover"> 
+                        <img src="{{ asset('storage/' . $pet->attachments->first()->data) }}" alt="Pet Banner" class="w-full h-48 object-cover">
                     @endif
 
                     <div class="p-6">
                         <h2 class="text-xl font-semibold mb-2">
                             <a href="{{ route('pets.show', $pet->id) }}" class="text-blue-500 hover:text-blue-700">{{ $pet->name }}</a>
                         </h2>
-                        
+
                         <p>
                             @if(isset($pet_types[$pet->pet_type_id]))
                                 <span class="font-bold">Animal:</span> {{ $pet_types[$pet->pet_type_id]->name }}<br>
