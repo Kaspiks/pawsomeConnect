@@ -63,7 +63,7 @@
                                 </form>
 
                                 <form method="GET" action="{{ route('posts.edit', $post->id) }}">
-                                    <button type="submit" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded text-sm">Update</button>
+                                    <button type="submit" class="ml-4 bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded text-sm">Update</button>
                                 </form>
                             </div>
                         @endcan
