@@ -59,7 +59,9 @@
                         Service by
                         <em>
                             @foreach ($service->owners as $owner)
-                                {{ $owner->nickname }}
+                                <a href="{{ route('profile.show', $owner->id) }}" class="text-gray-600">
+                                    <em>{{ $owner->nickname }}</em>
+                                </a>
                                 @if (!$loop->last)
                                     ,
                                 @endif

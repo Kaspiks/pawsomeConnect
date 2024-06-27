@@ -39,7 +39,8 @@
                 </p>
             @endif
 
-            <p>Category: {{ $service->category->name }}</p>
+            <p class="text-sm text-gray-500 mb-1">Category: {{ $service->category->name }}</p>
+            <p class="text-sm text-gray-500 mb-1">Price: {{ $service->price }}</p>
         </div>
 
         @if (!$service->owners->contains(Auth::user()) && !$service->customers->contains(Auth::user()))

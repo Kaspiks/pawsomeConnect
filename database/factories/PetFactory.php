@@ -22,20 +22,11 @@ class PetFactory extends Factory
             'Turtle' => ['Red-Eared Slider', 'Painted Turtle', 'Box Turtle'],
         ];
 
-        $nameFormats = [
-            '{adjective} {animal}',
-            '{name}',
-            '{color} {animal}',
-        ];
-
         $type = $this->faker->randomElement(array_keys($breeds));
         $breed = $this->faker->randomElement($breeds[$type]);
 
-        $format = $this->faker->randomElement($nameFormats);
-        $name = $this->faker->parse($format);
-
         return [
-            'name' => $name,
+            'name' => $this->faker->name,
             'description' => $this->faker->paragraph(),
             'age' => $this->faker->numberBetween(1, 15),
             'breed' => $breed,

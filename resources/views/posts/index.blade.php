@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Pawsome Connect</title>
-    @vite('resources/css/app.css') 
+    @vite('resources/css/app.css')
 </head>
 <body>
     @php
@@ -14,8 +14,8 @@
         @include('layouts.nav', ['menuItems' => $menuItems])
     </div>
 
-    <div class="container mx-auto p-4 bg-white"> 
-        @auth 
+    <div class="container mx-auto p-4 bg-white">
+        @auth
             <div>
                 <a href="{{ route('posts.create') }}" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                     Create Post
@@ -25,9 +25,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             @foreach ($posts as $post)
-                <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">  
+                <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
                     @if ($post->attachments->first())
-                        <img src="{{ asset('storage/' . $post->attachments->first()->data) }}" alt="Post Banner" class="w-full h-48 object-cover"> 
+                        <img src="{{ asset('storage/' . $post->attachments->first()->data) }}" alt="Post Banner" class="w-full h-48 object-cover">
                     @endif
 
                     <div class="p-4">
@@ -36,12 +36,17 @@
                         </a>
 
                         @if ($post->user)
-                            <p class="text-gray-600">An article by <em>{{ $post->user->nickname }}</em> published on {{ $post->created_at->format('d.m.y') }}</p>
+                            <p class="text-gray-600">An article by
+                                <a href="{{ route('profile.show', $post->user->id) }}" class="text-gray-600 hover:underline">
+                                    <em>{{ $post->user->nickname }}</em>
+                                </a>
+                                published on {{ $post->created_at->format('d.m.y') }}
+                            </p>
                         @else
                             <p class="text-gray-600">An article published on {{ $post->created_at->format('d.m.y') }}</p>
                         @endif
 
-                        <p class="text-gray-700 mt-2">{{ Str::limit($post->body, 150) }}</p> 
+                        <p class="text-gray-700 mt-2">{{ Str::limit($post->body, 150) }}</p>
 
                         @if(isset($categories[$post->category_id]))
                             <p class="text-gray-600 mt-2">in category {{ $categories[$post->category_id]->title }}</p>
